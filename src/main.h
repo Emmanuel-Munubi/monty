@@ -5,6 +5,11 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <sys/syscall.h>
 
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
@@ -36,6 +41,17 @@ typedef struct instruction_s
         void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
 
-extern size_t characters;
+/*Opcodes*/
+void push(stack_t **stack, unsigned int line_num, int n);
+void pall(stack_t **stack, unsigned int line_num);
+void pint(stack_t **stack, unsigned int line_num);
+void pop(stack_t **stack, unsigned int line_num);
+void swap(stack_t **stack, unsigned int line_num);
+void add(stack_t **stack, unsigned int line_num);
+/*Helpers*/
+int nlfind(char *list);
+int pushint(char *list, int ln);
+int combfind(char *list, int ln);
+
 
 #endif

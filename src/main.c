@@ -2,10 +2,12 @@
 
 int main(int argc, char *argv[])
 {
-    char *buffer;
+    stack_t *stack = NULL;
+    static char *buffer;
     size_t bufsize = 32;
     size_t characters;
     FILE *fp;
+    int i;
 
     while(argc--)
     {
@@ -31,7 +33,57 @@ int main(int argc, char *argv[])
     }
 
     characters = getline(&buffer, &bufsize, fp);
+    while(characters > 0)
+    {
+        execute(buffer, stack);
+    }
 
     fclose(fp);
     return (0);
+}
+
+
+void execute(char *buffer[], stack_t *stack)
+{
+	int ln, n, i;
+
+	instruction_t st[] = {
+		{"pall", pall},
+		{"pint", pint},
+		{"pop", pop},
+		{"swap", swap},
+		{"add", add}
+/**
+ *		{"null", NULL}
+*/
+	};
+
+	for (ln = 1, n = 0; buffer[n + 1]; n++, ln++)
+	{
+		if (_strcmp("push", buffer[n]))
+			push(&stack, ln, pushint(buffer[n], ln));
+		else if (_strcmp("nop", buffer[n]))
+			;
+		else
+		{
+			i = 0;
+			while (!_strcmp(st[i].opcode, "null"))
+			{
+				if (_strcmp(st[i].opcode, buffer[n]))
+				{
+					st[i].f(&stack, ln);
+					break;
+				}
+				i++;
+			}
+			if (_strcmp(st[i].opcode, "null") && !_strcmp(buffer[n], "\n"))
+			{
+				fprintf(stderr, "L%u: unknown instruction %s", ln, buffer[n]);
+				if (!nlfind(buffer[n]))
+					fprintf(stderr, "\n");
+				exit(EXIT_FAILURE);
+			}
+		}
+	}
+	/*free_stack(stack)*/
 }
