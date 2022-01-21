@@ -1,4 +1,4 @@
-#include "main.h"
+#include "monty.h"
 
 int main(int argc, char *argv[])
 {
@@ -9,12 +9,13 @@ int main(int argc, char *argv[])
     FILE *fp;
     int i;
 
+	/*****checking the commandline arguments*****/
     while(argc--)
     {
         if(argv[1] == NULL || argc > 1)
         {
-            printf("USAGE: monty file\n");
-            exit(EXIT_FAILURE);
+        	printf("USAGE: monty file\n");
+        	exit(EXIT_FAILURE);
         }
     }
 

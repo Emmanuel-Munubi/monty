@@ -1,114 +1,44 @@
-#include "main.h"
-
+#include "monty.h"
 /**
- * _strcmp - compares strings
- * @opcode: a string to be compared
- * @list: a string to be compared
- * Return: 0
+ * push_monty - Pushes An Element To The Stack.
+ * @stack: Pointer To The head
+ * @line_number: The Line Number
+ * Return:Void
  */
-int _strcmp(char *opcode, char *list)
+void push_monty(stack_t **stack, unsigned int line_number)
 {
-	while (*list != '\0')
+	stack_t *n_node;
+	(void)line_number;
+
+	n_node = malloc(sizeof(stack_t));
+	if (n_node == NULL)
+		handle_error(1);
+	if (_isdigit(info.arg[1]) > 0)
+		handle_error(5);
+	n_node->n = atoi(info.arg[1]);
+	if (info.type == LIFO)
 	{
-		if (*list == ' ')
-			list++;
-		else if (*opcode == *list)
-		{
-			opcode++;
-			list++;
-			if (*opcode == '\0' && (*list == ' ' || *list == '\n' || *list == '\0'))
-				return (1);
-		}
-		else
-			return (0);
+		add_node_lifo(stack, n_node);
 	}
-	return (0);
+	else
+		add_node_fifo(stack, n_node);
 }
-
 /**
- * nlfind - finds newline
- * @list: the string to find \n
- * Return: 1 || 0
+ * pall_monty - Prints All The Values On The Stack
+ * @stack: Pointer To The Head
+ * @line_number: Line Number
+ * Return: Void
  */
-int nlfind(char *list)
+void pall_monty(stack_t **stack, unsigned int line_number)
 {
-	char *opcode = "\n";
+	int i;
+	stack_t *node;
+	(void)line_number;
 
-	while (*list != '\0')
+	node = *stack;
+	for (i = 0; node; i++)
 	{
-		if (*opcode == *list)
-		{
-			opcode++;
-			list++;
-			if (*opcode == '\0')
-				return (1);
-		}
-		else
-			list++;
+		fprintf(stdout, "%d\n", node->n);
+		node = node->next;
 	}
-	return (0);
-}
-
-/**
- * pushint - int for push opcode
- * @list: the content of the file
- * @ln: line number
- * Return: the number
- */
-int pushint(char *list, int ln)
-{
-	char *opcode = "push";
-
-	while (*list != '\0')
-	{
-		if (*opcode == *list)
-		{
-			opcode++;
-			list++;
-			if (*opcode == '\0')
-				while (*list)
-				{
-					if ((*list >= '0' && *list <= '9') || *list == '-')
-					{
-						combfind(list, ln);
-						return (atoi(list));
-					}
-					else if (*list == ' ')
-						list++;
-					else
-					{
-						fprintf(stderr, "L%d: usage: push integer\n", ln);
-						exit(EXIT_FAILURE);
-					}
-				}
-		}
-		else
-			list++;
-	}
-	return (0);
-}
-
-/**
- * combfind - finds nonnumbers and number combinations
- * @list: the string
- * @ln: line number
- * Return: 1
- */
-int combfind(char *list, int ln)
-{
-	int i = 1;
-
-	while (list[i])
-	{
-		if (list[i] == '\0' || list[i] == '\n')
-			break;
-		if ((list[i] >= '0' && list[i] <= '9') || list[i] == ' ')
-			i++;
-		else
-		{
-			fprintf(stderr, "L%d: usage: push integer\n", ln);
-			exit(EXIT_FAILURE);
-		}
-	}
-	return (1);
 }
